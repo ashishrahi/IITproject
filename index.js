@@ -79,15 +79,15 @@ document.addEventListener("DOMContentLoaded", () => {
       }
 
       colDiv.innerHTML = `
-      <div style="margin-top:10px;margin-bottom:10px">
-        <button class="btn btn-danger remove-animal" data-name="${animal.Name}">Remove</button>
-        <button class="btn btn-success edit-animal" data-name="${animal.Name}">Edit</button>
-        <h6 style="display: flex; justify-content">Species: ${animal.Species}</h6>
-        <h6 style="display: flex; justify-content; ${nameStyle}">Name: ${animal.Name}</h6>
-        <h6 style="display: flex; justify-content">Size: ${animal.Size} ft</h6>
-        <h6 style="display: flex; justify-content">Location: ${animal.Location}</h6>
-        <img src="${animal.Image}" alt="${animal.Name}" style="display: flex; justify-content" class="img-fluid w-20 h-20">
-      </div>
+        <div style="margin-top:10px;margin-bottom:10px">
+          <button class="btn btn-danger delete-animal" data-name="${animal.Name}">Delete</button>
+          <button class="btn btn-success edit-animal" data-name="${animal.Name}" data-species="${animal.Species}" data-size="${animal.Size}" data-location="${animal.Location}" data-image="${animal.Image}">Edit</button>
+          <h6 style="display: flex; justify-content">Species: ${animal.Species}</h6>
+          <h6 style="display: flex; justify-content; ${nameStyle}">Name: ${animal.Name}</h6>
+          <h6 style="display: flex; justify-content">Size: ${animal.Size} ft</h6>
+          <h6 style="display: flex; justify-content">Location: ${animal.Location}</h6>
+          <img src="${animal.Image}" alt="${animal.Name}" style="display: flex; justify-content" class="img-fluid w-20 h-20">
+        </div>
       `;
 
       // Append the column to the row
@@ -157,23 +157,70 @@ document.addEventListener("DOMContentLoaded", () => {
     renderAnimals(sortedAnimals);
   });
 
-  // Remove Animal functionality
   animalRowsDiv.addEventListener('click', (e) => {
-    if (e.target && e.target.classList.contains('remove-animal')) {
+    if (e.target && e.target.classList.contains('delete-animal')) {
       const animalName = e.target.getAttribute('data-name');
 
+      // Remove the animal
       Object.values(structuredData).forEach(speciesArray => {
         const index = speciesArray.findIndex(animal => animal.Name === animalName);
         if (index > -1) {
-          speciesArray.splice(index, 1);
+          speciesArray.splice(index, 1); // Permanently 
         }
       });
 
-      // Save the updated data to localStorage
+      // Save  localStorage
       localStorage.setItem('animalData', JSON.stringify(structuredData));
 
       renderAnimals(Object.values(structuredData).flat());
     }
+
+    if (e.target && e.target.classList.contains('edit-animal')) {
+      const animalName = e.target.getAttribute('data-name');
+      const species = e.target.getAttribute('data-species');
+      const size = e.target.getAttribute('data-size');
+      const location = e.target.getAttribute('data-location');
+      const image = e.target.getAttribute('data-image');
+
+      // Populate the edit modal with the selected animal's data
+      document.getElementById('edit-species').value = species;
+      document.getElementById('edit-name').value = animalName;
+      document.getElementById('edit-size').value = size;
+      document.getElementById('edit-location').value = location;
+      document.getElementById('edit-image').value = image;
+
+      //edit modal
+      const editAnimalModal = new bootstrap.Modal(document.getElementById('edit-animal-modal'));
+      editAnimalModal.show();
+
+      //  form submission
+      document.getElementById('edit-animal-form').addEventListener('submit', (e) => {
+        e.preventDefault();
+
+        const updatedSpecies = document.getElementById('edit-species').value;
+        const updatedName = document.getElementById('edit-name').value;
+        const updatedSize = parseInt(document.getElementById('edit-size').value, 10);
+        const updatedLocation = document.getElementById('edit-location').value;
+        const updatedImage = document.getElementById('edit-image').value.trim() || './assets/alabai.png';
+
+        const animal = Object.values(structuredData)
+          .flat()
+          .find(animal => animal.Name === animalName);
+
+        if (animal) {
+          animal.Species = updatedSpecies;
+          animal.Name = updatedName;
+          animal.Size = updatedSize;
+          animal.Location = updatedLocation;
+          animal.Image = updatedImage;
+        }
+
+        localStorage.setItem('animalData', JSON.stringify(structuredData));
+
+        renderAnimals(Object.values(structuredData).flat());
+
+        editAnimalModal.hide();
+      });
+    }
   });
 });
-  

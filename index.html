@@ -57,6 +57,43 @@
         </div>
       </div>
     </div>
+    <!-- Edit modal -->
+<div class="modal fade" id="edit-animal-modal" tabindex="-1" aria-labelledby="editAnimalModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="editAnimalModalLabel">Edit Animal</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <form id="edit-animal-form">
+          <div class="mb-3">
+            <label for="edit-species" class="form-label">Species</label>
+            <input type="text" class="form-control" id="edit-species" required>
+          </div>
+          <div class="mb-3">
+            <label for="edit-name" class="form-label">Name</label>
+            <input type="text" class="form-control" id="edit-name" required>
+          </div>
+          <div class="mb-3">
+            <label for="edit-size" class="form-label">Size (ft)</label>
+            <input type="number" class="form-control" id="edit-size" required>
+          </div>
+          <div class="mb-3">
+            <label for="edit-location" class="form-label">Location</label>
+            <input type="text" class="form-control" id="edit-location" required>
+          </div>
+          <div class="mb-3">
+            <label for="edit-image" class="form-label">Image URL</label>
+            <input type="text" class="form-control" id="edit-image">
+          </div>
+          <button type="submit" class="btn btn-primary">Save Changes</button>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+
 
     <!-- Controls for sorting -->
     <div class="d-flex justify-content-center mt-3">
